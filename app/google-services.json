@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "226250677041",
+    "firebase_url": "https://marceloszapzap.firebaseio.com",
+    "project_id": "marceloszapzap",
+    "storage_bucket": "marceloszapzap.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:226250677041:android:15bedf43b7c0df8b32ee10",
+        "android_client_info": {
+          "package_name": "br.com.marcelos.marceloszapzap"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "226250677041-mj8sca3ndjocnp4dcbon4seprf5f2qje.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "br.com.marcelos.marceloszapzap",
+            "certificate_hash": "adcb30c5b891329c70b3cda0917687ab7b993976"
+          }
+        },
+        {
+          "client_id": "226250677041-7od9k58hqcld4mg2arhqh1s6v51k6dvf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCvLL3kU2Ci8Yg9DUlnFjZfa0OGO8sBN2o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "226250677041-7od9k58hqcld4mg2arhqh1s6v51k6dvf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

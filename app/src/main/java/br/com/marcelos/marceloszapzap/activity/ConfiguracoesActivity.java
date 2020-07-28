@@ -7,8 +7,10 @@ import androidx.appcompat.widget.Toolbar;
 
 import android.Manifest;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.View;
 import android.widget.ImageButton;
 
@@ -23,6 +25,8 @@ public class ConfiguracoesActivity extends AppCompatActivity {
     };
 
     private ImageButton imageButtonCamera, imageButtonGaleria;
+    private static final int SELECAO_CAMERA = 100;
+    private static final int SELECAO_GALERIA = 200;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,8 +51,14 @@ public class ConfiguracoesActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                // Intent para solicitar funções padrões do Android, nesse caso a camera
-                // Envia mensagem para o android, para usar a função da camera
+                 // Intent para solicitar funções padrões do Android, nesse caso a camera
+                 // Envia mensagem para o android, para usar a função da camera
+                 Intent i = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                 // Valida se o aparelho tem camera
+                 if( i.resolveActivity(getPackageManager()) != null){
+
+                     startActivityForResult(i, SELECAO_CAMERA);
+                 }
 
 
             }

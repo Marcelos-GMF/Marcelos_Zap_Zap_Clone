@@ -19,16 +19,16 @@
         app:layout_constraintVertical_chainStyle="packed" />
 
     <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/circleImageViewFotoPerfil"
-        android:layout_width="160dp"
-        android:layout_height="0dp"
-        android:layout_marginBottom="16dp"
-        android:background="@color/cinza_claro"
-        android:src="@drawable/padrao"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/include2" />
+            android:id="@+id/circleImageViewFotoPerfil"
+            android:layout_width="160dp"
+            android:layout_height="160dp"
+            android:layout_marginBottom="16dp"
+            android:background="@color/cinza_claro"
+            android:src="@drawable/padrao"
+            app:layout_constraintBottom_toTopOf="@+id/linearLayout"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/include2"/>
 
     <LinearLayout
         android:id="@+id/linearLayout"

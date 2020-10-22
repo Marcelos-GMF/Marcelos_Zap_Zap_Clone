@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     tools:context=".activity.ConfiguracoesActivity">
 
     <include
@@ -11,7 +11,6 @@
         layout="@layout/toolbar"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="61dp"
         app:layout_constraintBottom_toTopOf="@+id/circleImageViewFotoPerfil"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -19,16 +18,16 @@
         app:layout_constraintVertical_chainStyle="packed" />
 
     <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/circleImageViewFotoPerfil"
-            android:layout_width="160dp"
-            android:layout_height="160dp"
-            android:layout_marginBottom="16dp"
-            android:background="@color/cinza_claro"
-            android:src="@drawable/padrao"
-            app:layout_constraintBottom_toTopOf="@+id/linearLayout"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/include2"/>
+        android:id="@+id/circleImageViewFotoPerfil"
+        android:layout_width="160dp"
+        android:layout_height="160dp"
+        android:layout_marginBottom="16dp"
+        android:background="@color/cinza_claro"
+        android:src="@drawable/padrao"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/include2" />
 
     <LinearLayout
         android:id="@+id/linearLayout"
@@ -52,7 +51,7 @@
         app:layout_constraintTop_toBottomOf="@+id/circleImageViewFotoPerfil">
 
         <EditText
-            android:id="@+id/editText"
+            android:id="@+id/editPerfilNome"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -61,7 +60,7 @@
             android:text="Nome do usuário" />
 
         <ImageView
-            android:id="@+id/imageView3"
+            android:id="@+id/imageAtualizarNome"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/ic_editar_verde_24dp" />

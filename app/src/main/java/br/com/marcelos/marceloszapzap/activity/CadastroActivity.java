@@ -19,6 +19,7 @@ import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import br.com.marcelos.marceloszapzap.R;
 import br.com.marcelos.marceloszapzap.config.ConfiguracaoFirebase;
 import br.com.marcelos.marceloszapzap.helper.Base64Custom;
+import br.com.marcelos.marceloszapzap.helper.UsuarioFirebase;
 import br.com.marcelos.marceloszapzap.model.Usuario;
 
 public class CadastroActivity extends AppCompatActivity {
@@ -31,7 +32,7 @@ public class CadastroActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cadastro);
 
-        campoNome = findViewById(R.id.editNome);
+        campoNome = findViewById(R.id.editPerfilNome);
         campoEmail = findViewById(R.id.editLoginEmail);
         campoSenha = findViewById(R.id.editLoginSenha);
 
@@ -99,7 +100,10 @@ public class CadastroActivity extends AppCompatActivity {
                     Toast.makeText(CadastroActivity.this,
                             "Cadastro realizado com sucesso!",
                             Toast.LENGTH_SHORT).show();
+                    //Metodo para atualizar o nome do usuário perfil
+                    UsuarioFirebase.atualizarNomeUsuario(usuario.getNome());
                     finish();
+
                 }else {
                     String excecao = "";
                     try{

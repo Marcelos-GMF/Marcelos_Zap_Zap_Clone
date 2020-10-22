@@ -2,11 +2,11 @@ package br.com.marcelos.marceloszapzap.activity;
 
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.Build;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -24,14 +24,17 @@ import br.com.marcelos.marceloszapzap.R;
 import br.com.marcelos.marceloszapzap.config.ConfiguracaoFirebase;
 import br.com.marcelos.marceloszapzap.helper.Permissao;
 import br.com.marcelos.marceloszapzap.helper.UsuarioFirebase;
+
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+
+import br.com.marcelos.marceloszapzap.model.Usuario;
 import de.hdodenhof.circleimageview.CircleImageView;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 
 //@RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
@@ -48,6 +51,9 @@ public class ConfiguracoesActivity extends AppCompatActivity {
     private CircleImageView imageViewFotoPerfil;
     private StorageReference storageReference;
     private String identificadorUsuario;
+    private EditText editPerfilNome;
+    private ImageView imageAtualizarNome;
+    private Usuario usuarioLogado;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,11 +62,14 @@ public class ConfiguracoesActivity extends AppCompatActivity {
 
         // Configurações iniciais
         storageReference = ConfiguracaoFirebase.getFirebaseStorage();
-        identificadorUsuario = UsuarioFirebase.getIdentificadroUsuario();
+        identificadorUsuario = UsuarioFirebase.getIdentificadorUsuario();
+        usuarioLogado = UsuarioFirebase.getDadosUsuarioLogado();
 
         imageButtonCamera = findViewById(R.id.imageButtonCamera);
         imageButtonGaleria = findViewById(R.id.imageButtonGaleria);
         imageViewFotoPerfil = findViewById(R.id.circleImageViewFotoPerfil);
+        editPerfilNome = findViewById(R.id.editPerfilNome);
+        imageAtualizarNome = findViewById(R.id.imageAtualizarNome);
 
         //Validar permissoes
         Permissao.validarPermissoes(permissoesNecessarias, this, 1);
@@ -71,6 +80,21 @@ public class ConfiguracoesActivity extends AppCompatActivity {
 
         // Criando um botão de voltar na tela
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        //Recupera os dados do usuário Atual
+        FirebaseUser usuario = UsuarioFirebase.getUsuarioAtual();
+        Uri url = usuario.getPhotoUrl();
+
+        // Validação caso não exista imagem, coloca a imagem padrão.
+        if(url != null){
+            Glide.with(ConfiguracoesActivity.this)
+                    .load(url)
+                    .into(imageViewFotoPerfil);
+        }else {
+            imageViewFotoPerfil.setImageResource(R.drawable.padrao);
+        }
+        // Colocando o nome novo de usuário
+        editPerfilNome.setText(usuario.getDisplayName());
 
         //Evento de click
         imageButtonCamera.setOnClickListener(new View.OnClickListener() {
@@ -85,7 +109,6 @@ public class ConfiguracoesActivity extends AppCompatActivity {
 
                      startActivityForResult(i, SELECAO_CAMERA);
                  }
-
 
             }
         });
@@ -102,6 +125,27 @@ public class ConfiguracoesActivity extends AppCompatActivity {
                 if( i.resolveActivity(getPackageManager()) != null){
 
                     startActivityForResult(i, SELECAO_GALERIA);
+                }
+
+            }
+        });
+
+        //EVENTO PARA ATUALIZAR O NOME DO PERFIL USUÁRIO
+        imageAtualizarNome.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                String nome = editPerfilNome.getText().toString();
+                boolean retorno = UsuarioFirebase.atualizarNomeUsuario(nome);
+
+                if(retorno){
+
+                    usuarioLogado.setNome(nome);
+                    usuarioLogado.atualizar();
+
+                    Toast.makeText(ConfiguracoesActivity.this,
+                            "Nome alterado com sucesso!",
+                            Toast.LENGTH_SHORT).show();
                 }
 
             }
@@ -137,7 +181,7 @@ public class ConfiguracoesActivity extends AppCompatActivity {
                     byte[] dadosImagem = byteArrayStream.toByteArray();
 
                     //Salvando imagem no banco Firebase Storage
-                    StorageReference imageRef = storageReference
+                    final StorageReference imageRef = storageReference
                             .child("imagens")
                             .child("perfil")
                             //.child(identificadorUsuario)
@@ -158,6 +202,20 @@ public class ConfiguracoesActivity extends AppCompatActivity {
                             Toast.makeText(ConfiguracoesActivity.this,
                                     "Imagem enviada para o servidor com sucesso!",
                                     Toast.LENGTH_SHORT).show();
+
+                            //Atualizando a imagem versão 11 do FireBase
+                            Uri url = taskSnapshot.getDownloadUrl();
+                            atualizarFotoUsuario(url);
+
+
+                            //Metodo atualizado para o FireBase > 11
+                       /*     imageRef.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Uri> task) {
+                                   Uri url = task.getResult();
+                                }
+                            });*/
+
                         }
                     });
 
@@ -169,6 +227,22 @@ public class ConfiguracoesActivity extends AppCompatActivity {
         }
 
     }
+
+    // Metodo para atualizar foto do usuário no firebase
+    public void atualizarFotoUsuario(Uri url){
+       boolean retorno = UsuarioFirebase.atualizarFotoUsuario(url);
+
+       if(retorno){
+           usuarioLogado.setFoto(url.toString());
+           usuarioLogado.atualizar();
+
+           Toast.makeText(ConfiguracoesActivity.this,
+                   "Foto alterado com sucesso!",
+                   Toast.LENGTH_SHORT).show();
+       }
+
+    }
+
 
     // Metodo para validar permissões no android caso o usuário negue a permissão
     @Override

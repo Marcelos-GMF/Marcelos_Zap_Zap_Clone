@@ -88,7 +88,7 @@ public class CadastroActivity extends AppCompatActivity {
                 if(task.isSuccessful()){
 
                     try{
-                        // Salvando usuario no banco de dados
+                        // Salvando usuario no banco de dados firebase
                         String identificadorUsuario = Base64Custom.codificarBase64(usuario.getEmail());
                         usuario.setId(identificadorUsuario);
                         usuario.salvar();

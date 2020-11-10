@@ -1,6 +1,7 @@
 package br.com.marcelos.marceloszapzap.fragment;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -10,7 +11,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -19,8 +22,11 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 
 import br.com.marcelos.marceloszapzap.R;
+import br.com.marcelos.marceloszapzap.activity.ChatActivity;
 import br.com.marcelos.marceloszapzap.adapter.ContatosAdapter;
 import br.com.marcelos.marceloszapzap.config.ConfiguracaoFirebase;
+import br.com.marcelos.marceloszapzap.helper.RecyclerItemClickListener;
+import br.com.marcelos.marceloszapzap.helper.UsuarioFirebase;
 import br.com.marcelos.marceloszapzap.model.Usuario;
 
 /**
@@ -34,6 +40,8 @@ public class ContatosFragment extends Fragment {
     private DatabaseReference usuarioRef;
     //Evento da lista
     private ValueEventListener valueEventListener;
+    //Usuáro atual
+    private FirebaseUser usuarioAtual;
 
     public ContatosFragment() {
         // Required empty public constructor
@@ -49,6 +57,7 @@ public class ContatosFragment extends Fragment {
         //Configurações iniciais
         recyclerViewListaContatos = view.findViewById(R.id.recyclerViewListaContatos);
         usuarioRef = ConfiguracaoFirebase.getFirebaseDatabase().child("usuarios");
+        usuarioAtual = UsuarioFirebase.getUsuarioAtual();
 
         //Configurar adapter
         adapter = new ContatosAdapter(listaContatos, getActivity());
@@ -59,6 +68,31 @@ public class ContatosFragment extends Fragment {
         recyclerViewListaContatos.setHasFixedSize( true );
         recyclerViewListaContatos.setAdapter( adapter );
 
+        //Configurando evento de clique no recycleView
+         recyclerViewListaContatos.addOnItemTouchListener(
+                 new RecyclerItemClickListener(
+                         getActivity(),
+                         recyclerViewListaContatos,
+                         new RecyclerItemClickListener.OnItemClickListener() {
+                             @Override
+                             public void onItemClick(View view, int position) {
+
+                                 Intent i = new Intent(getActivity(), ChatActivity.class);
+                                 startActivity(i);
+                             }
+
+                             @Override
+                             public void onLongItemClick(View view, int position) {
+
+                             }
+
+                             @Override
+                             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                             }
+                         }
+                 )
+         );
 
 
         return view;
@@ -66,7 +100,7 @@ public class ContatosFragment extends Fragment {
 
     @Override
     public void onStart() {
-        // cicle de vida do fragment
+        // ciclo de vida do fragment
         super.onStart();
         recuperarContatos();
     }
@@ -74,7 +108,7 @@ public class ContatosFragment extends Fragment {
     @Override
     public void onStop() {
         super.onStop();
-        // Quando não utilizado, removemos o fragment
+        // Quando não utilizado, removemos o fragment listener
         usuarioRef.removeEventListener(valueEventListener);
     }
 
@@ -87,7 +121,13 @@ public class ContatosFragment extends Fragment {
                 for(DataSnapshot dados: dataSnapshot.getChildren()){
 
                     Usuario usuario = dados.getValue( Usuario.class );
-                    listaContatos.add(usuario);
+
+                    String emailUsuarioAtual = usuarioAtual.getEmail();
+                    //Separa o usuário logado.
+                    if(!emailUsuarioAtual.equals(usuario.getEmail())) {
+                        listaContatos.add(usuario);
+                    }
+
                 }
                 // Avisa que a lista foi modificada.
                 adapter.notifyDataSetChanged();

@@ -50,7 +50,7 @@ public class ContatosAdapter extends RecyclerView.Adapter<ContatosAdapter.MyView
             // Biblioteca de fotos.
             Glide.with(context).load(uri).into(holder.foto);
         } else {
-            // Caso não exista foto, coloco uma foto patrão.
+            // Caso não exista foto, coloco uma foto patrão. Teste commit
             holder.foto.setImageResource(R.drawable.padrao);
         }
 

@@ -18,6 +18,7 @@ import br.com.marcelos.marceloszapzap.R;
 import br.com.marcelos.marceloszapzap.model.Usuario;
 import de.hdodenhof.circleimageview.CircleImageView;
 
+// Teste no commit GitLab
 public class ContatosAdapter extends RecyclerView.Adapter<ContatosAdapter.MyViewHolder> {
 
     private List<Usuario> contatos;
